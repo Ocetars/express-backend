@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL: process.env.API_BASE_URL || 'https://api.mihomo.me/sr_info/',
+  baseURL: process.env.API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
