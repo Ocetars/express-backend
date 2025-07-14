@@ -39,9 +39,8 @@ app.use(express.json());
 app.get('/health', (_, res) => {
   res.status(200).json({
     status: 'OK',
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
     environment: process.env.NODE_ENV || 'development!',
-    version: '1.0.0'
   });
 });
 
