@@ -11,7 +11,8 @@ const apiClient: AxiosInstance = axios.create({
   baseURL: normalizedBaseURL,
   timeout: 10000,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'User-Agent': 'SR-Quick'
   }
 });
 
