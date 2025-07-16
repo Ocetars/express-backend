@@ -106,5 +106,5 @@ temp/
 
 # 我的手动指定
 .claude
-package-lock.json
+# package-lock.json
 CLAUDE.md
