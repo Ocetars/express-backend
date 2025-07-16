@@ -6,8 +6,8 @@ WORKDIR /app
 # 复制 package 文件
 COPY package*.json ./
 
-# 安装依赖
-RUN npm ci --only=production
+# 安装所有依赖（包括开发依赖，构建时需要）
+RUN npm ci
 
 # 复制源代码
 COPY . .
@@ -27,10 +27,12 @@ RUN apk add --no-cache dumb-init
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodeuser -u 1001
 
-# 复制构建文件和依赖
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
+# 复制 package 文件并安装生产依赖
 COPY --from=builder /app/package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# 复制构建文件
+COPY --from=builder /app/dist ./dist
 
 # 创建日志目录
 RUN mkdir -p logs && chown -R nodeuser:nodejs logs
