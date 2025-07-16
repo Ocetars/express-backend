@@ -12,8 +12,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// 设置 trust proxy 以支持反向代理环境
-app.set('trust proxy', true);
+// 设置 trust proxy 为具体数量，而不是 true，以提高安全性
+// 通常在云环境中有1层代理（负载均衡器）
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet());
@@ -22,7 +23,13 @@ app.use(helmet());
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'),
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
-  message: { error: 'Too many requests, please try again later.' }
+  message: { error: 'Too many requests, please try again later.' },
+  // 添加标准化的 IP 处理以防止端口号干扰
+  keyGenerator: (req) => {
+    // 移除可能的端口号，只保留 IP 地址
+    const ip = req.ip || req.socket.remoteAddress || 'unknown';
+    return ip.replace(/:\d+[^:]*$/, '');
+  }
 });
 app.use('/api', limiter);
 
@@ -31,7 +38,7 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 // Middleware
 const corsOptions = {
-  origin: process.env.FRONTEND_URL?.split(',').map(url => url.trim()) || ['http://localhost:3000'],
+  origin: process.env.FRONTEND_URL?.split(',').map(url => url.trim()) || ['http://localhost:8080'],
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -44,6 +51,17 @@ app.get('/health', (_, res) => {
     status: 'OK',
     timestamp: new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
     environment: process.env.NODE_ENV || 'development!',
+  });
+});
+
+// 调试端点：检查 IP 地址和代理配置
+app.get('/debug/ip', (req, res) => {
+  res.json({
+    ip: req.ip,
+    ips: req.ips,
+    remoteAddress: req.socket.remoteAddress,
+    xForwardedFor: req.headers['x-forwarded-for'],
+    trustProxy: app.get('trust proxy')
   });
 });
 
