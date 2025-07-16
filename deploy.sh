@@ -88,7 +88,9 @@ case $choice in
     docker run -d \
       --name mihomo-express-backend \
       --restart unless-stopped \
-      -p 3000:3000 \
+      -p 8080:8080 \
+      -e NODE_ENV=production \
+      -e API_BASE_URL=https://api.mihomo.me \
       -v "$(pwd)/logs:/app/logs" \
       mihomo-express-backend
     
@@ -107,5 +109,5 @@ case $choice in
 esac
 
 echo "🎉 部署完成！"
-echo "🌐 健康检查: http://localhost:3000/health"
+echo "🌐 健康检查: http://localhost:8080/health"
 echo "📚 API 文档: 查看 API.md"
