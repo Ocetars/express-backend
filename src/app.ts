@@ -12,6 +12,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// 设置 trust proxy 以支持反向代理环境
+app.set('trust proxy', true);
+
 // Security middleware
 app.use(helmet());
 
