@@ -11,15 +11,10 @@ services:
       - NODE_ENV=production
       - PORT=8080
       - API_BASE_URL=http://api.mihomo.me/sr_info_parsed
-      - FRONTEND_URL=http://localhost:8080,http://localhost:5173,https://express-sf1m-173672-5-1369600074.sh.run.tcloudbase.com
+      - FRONTEND_URL=http://localhost:5173,https://express-sf1m-173672-5-1369600074.sh.run.tcloudbase.com
       - RATE_LIMIT_WINDOW_MS=900000
       - RATE_LIMIT_MAX_REQUESTS=100
     volumes:
       - ./logs:/app/logs
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    # 健康检查已在 Dockerfile 中定义，这里可以移除避免重复

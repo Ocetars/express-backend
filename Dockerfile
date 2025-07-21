@@ -20,8 +20,8 @@ FROM node:18-alpine AS production
 
 WORKDIR /app
 
-# 安装 dumb-init
-RUN apk add --no-cache dumb-init
+# 安装 dumb-init 和 curl（用于健康检查）
+RUN apk add --no-cache dumb-init curl
 
 # 创建非 root 用户
 RUN addgroup -g 1001 -S nodejs && \
