@@ -18,8 +18,8 @@ const dbConfig = {
   // // 微信云托管优化配置
   // reconnect: true,
   multipleStatements: false,
-  // SSL 配置（生产环境推荐）
-  ...(process.env.NODE_ENV === 'production' ? { ssl: { rejectUnauthorized: false } } : {})
+  // SSL 配置（根据环境变量决定是否启用）
+  ...(process.env.DB_SSL === 'true' ? { ssl: { rejectUnauthorized: false } } : {})
 };
 
 // 创建连接池
