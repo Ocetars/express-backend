@@ -1,3 +1,4 @@
+// 原有类型定义
 export interface LevelInfo {
   id: string;
   level: number;

@@ -5,7 +5,10 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import playerRoutes from './routes/playerRoutes';
+import authRoutes from './routes/authRoutes';
+import userDataRoutes from './routes/userDataRoutes';
 import errorHandler from './middleware/errorHandler';
+import './config/database'; // 初始化数据库连接
 
 dotenv.config();
 
@@ -66,11 +69,20 @@ app.get('/debug/ip', (req, res) => {
 });
 
 app.use('/api/player', playerRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/user', userDataRoutes);
 
 // Error handling
 app.use(errorHandler);
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log('=================================');
+  console.log('🚀 Express Backend Server Started');
+  console.log('=================================');
+  console.log(`Port: ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'unknown'}`);
+  console.log(`Database Host: ${process.env.DB_HOST || 'unknown'}`);
+  console.log(`API Base URL: ${process.env.API_BASE_URL || 'unknown'}`);
+  console.log('=================================');
 });
